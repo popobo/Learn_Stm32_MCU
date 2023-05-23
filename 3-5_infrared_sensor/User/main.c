@@ -5,13 +5,22 @@
 #include "Buzzer.h"
 #include "LightSensor.h"
 #include "OLed.h"
+#include "CountSensor.h"
+
+static int32_t count;
+
+void Count(void)
+{
+    count++;
+}
 
 int main()
 {   
     OLED_Init();
-    OLED_ShowString(1, 1, "hello");
-
+    CountSensor_Init();
+    CountSensor_Set_Handler(Count);
     while(1)
 	{
+        OLED_ShowNum(1, 1, count, 4);
 	}
 }
