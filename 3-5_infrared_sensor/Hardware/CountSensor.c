@@ -42,7 +42,7 @@ void EXTI15_10_IRQHandler(void)
         { 
             m_handler();
         }
-        EXTI_ClearFlag(EXTI_Line11);
+        EXTI_ClearITPendingBit(EXTI_Line11);
     }
 }
 
