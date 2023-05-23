@@ -35,4 +35,3 @@ uint8_t Key(void)
     }
     return key_num;
 }
- 
