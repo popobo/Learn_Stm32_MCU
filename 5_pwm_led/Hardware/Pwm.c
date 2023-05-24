@@ -6,11 +6,13 @@ void PWM_Init(void)
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
     GPIO_InitTypeDef GPIOA_init_stru;
     GPIOA_init_stru.GPIO_Mode = GPIO_Mode_AF_PP; //复用推挽输出，让定时器进行输出控制
-    GPIOA_init_stru.GPIO_Pin = GPIO_Pin_0;
+    GPIOA_init_stru.GPIO_Pin = GPIO_Pin_15;
     GPIOA_init_stru.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_Init(GPIOA, &GPIOA_init_stru);
 
-    GPIO_SetBits(GPIOA, GPIO_Pin_0);
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);
+    GPIO_PinRemapConfig(GPIO_PartialRemap1_TIM2, ENABLE);// 部分重映射
+    GPIO_PinRemapConfig(GPIO_Remap_SWJ_JTAGDisable, ENABLE); // 接触JTAG的调试复用
 
     //时基单元初始化
     RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
