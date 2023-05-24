@@ -27,8 +27,10 @@ int main()
     OLED_Init();
     Timer_Set_Handler(Count);
     Timer_Init();
+    CountSensor_Init();
     while(1)
 	{
         OLED_ShowSignedNum(1, 1, count, 4);
+        OLED_ShowNum(2, 1, Timer_GetCounter(), 5);
 	}
 }
