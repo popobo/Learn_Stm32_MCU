@@ -775,6 +775,16 @@
               <FileType>5</FileType>
               <FilePath>.\Hardware\Encoder.h</FilePath>
             </File>
+            <File>
+              <FileName>Pwm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Hardware\Pwm.c</FilePath>
+            </File>
+            <File>
+              <FileName>Pwm.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Hardware\Pwm.h</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
