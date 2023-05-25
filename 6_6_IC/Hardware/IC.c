@@ -27,7 +27,14 @@ void IC_Init(void)
     TIM_IC_init_stru.TIM_ICPolarity = TIM_ICPolarity_Rising;
     TIM_IC_init_stru.TIM_ICPrescaler = TIM_ICPSC_DIV1;
     TIM_IC_init_stru.TIM_ICSelection = TIM_ICSelection_DirectTI;
-    TIM_ICInit(TIM3, &TIM_IC_init_stru);
+    TIM_PWMIConfig(TIM3, &TIM_IC_init_stru);
+
+    // TIM_IC_init_stru.TIM_Channel = TIM_Channel_2;
+    // TIM_IC_init_stru.TIM_ICFilter = 0xF;
+    // TIM_IC_init_stru.TIM_ICPolarity = TIM_ICPolarity_Falling;
+    // TIM_IC_init_stru.TIM_ICPrescaler = TIM_ICPSC_DIV1;
+    // TIM_IC_init_stru.TIM_ICSelection = TIM_ICSelection_IndirectTI;//交叉输入
+    // TIM_ICInit(TIM3, &TIM_IC_init_stru);
 
     TIM_SelectInputTrigger(TIM3, TIM_TS_TI1FP1);
     TIM_SelectSlaveMode(TIM3, TIM_SlaveMode_Reset);
@@ -38,4 +45,9 @@ void IC_Init(void)
 uint32_t IC_GetFreq(void)
 {
     return 1000000 / TIM_GetCapture1(TIM3);
+}
+
+uint32_t IC_GetDuty(void)
+{
+    return TIM_GetCapture2(TIM3) * 100 / TIM_GetCapture1(TIM3);
 }
