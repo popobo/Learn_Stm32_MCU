@@ -11,27 +11,23 @@
 #include "Pwm.h"
 #include "Servo.h"
 #include "IC.h"
+#include "AD.h"
 
-int16_t speed;
-
-void TIM2_IRQHandler(void)
-{
-    if (TIM_GetITStatus(TIM2, TIM_IT_Update) == SET)
-    {
-        speed = Encoder_Get();
-        TIM_ClearITPendingBit(TIM2, TIM_IT_Update);
-    }
-}
+uint16_t AD_value;
+float voltage;
 
 int main()
 {   
     OLED_Init();
-    Encoder_Init();
-    Timer_Init();
-    OLED_ShowString(1, 1, "CNT:00000");
+    AD_Init();
 
     while(1)
 	{
-        OLED_ShowSignedNum(1, 5, speed, 5);
-	}
+        AD_value = AD_GetValue();
+        voltage = (float)AD_value / 4095 * 3.3;
+        OLED_ShowNum(1, 1, AD_value, 4);
+        OLED_ShowNum(2, 1, voltage, 1);
+        OLED_ShowNum(2, 3, (uint32_t)(voltage * 100) % 100, 2);
+        Delay_ms(100);
+    }
 }
