@@ -10,27 +10,21 @@
 #include "Timer.h"
 #include "Pwm.h"
 #include "Servo.h"
+#include "IC.h"
 
 // 不要在中断函数和主函数调用相同的函数或操作同一个硬件,因为硬件不会保存上下文
 int main()
 {   
-    Key_Init();
-    Servo_Init();
     OLED_Init();
-    uint8_t key_num = 0;
-    float angle = 0.0;
+    PWM_Init();
+    IC_Init();
+
+    OLED_ShowString(1, 1, "Freq:00000Hz");
+    Pwm_SetCompare2(500);
+    Pwm_SetPrescaler2(720 - 1);
+
     while(1)
 	{
-        key_num = Key();
-        if (key_num == 1)
-        {
-            angle += 30;
-            if (angle > 180)
-            {
-                angle = 0;
-            }
-        }
-        OLED_ShowNum(1, 7, angle, 3);
-        Servo_SetAngle(angle);
+        OLED_ShowNum(1, 6, IC_GetFreq(), 5);
 	}
 }

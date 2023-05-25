@@ -18,12 +18,10 @@ void PWM_Init(void)
     TIM_TimeBaseInitTypeDef TIM_time_base_stru;
     TIM_time_base_stru.TIM_ClockDivision = TIM_CKD_DIV1;
     TIM_time_base_stru.TIM_CounterMode = TIM_CounterMode_Up;
-    TIM_time_base_stru.TIM_Period = 20000 -1; // ARR
+    TIM_time_base_stru.TIM_Period = 1000 -1; // ARR
     TIM_time_base_stru.TIM_Prescaler = 72 - 1; // PSC
     TIM_time_base_stru.TIM_RepetitionCounter = 0; //高级定时器才有
     TIM_TimeBaseInit(TIM2, &TIM_time_base_stru);
-
-    TIM_Cmd(TIM2, ENABLE);
 
     TIM_OCInitTypeDef TIM_oc_init_stru;
     TIM_OCStructInit(&TIM_oc_init_stru);
@@ -37,8 +35,12 @@ void PWM_Init(void)
     TIM_Cmd(TIM2, ENABLE);
 }
 
-// 500 ~ 2500
 void Pwm_SetCompare2(uint16_t compare)
 {
     TIM_SetCompare2(TIM2, compare);
+}
+
+void Pwm_SetPrescaler2(uint16_t prescaler)
+{
+    TIM_PrescalerConfig(TIM2, prescaler, TIM_PSCReloadMode_Update);
 }
