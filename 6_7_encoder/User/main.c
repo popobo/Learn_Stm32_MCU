@@ -12,21 +12,26 @@
 #include "Servo.h"
 #include "IC.h"
 
-// 不要在中断函数和主函数调用相同的函数或操作同一个硬件,因为硬件不会保存上下文
+int16_t speed;
+
+void TIM2_IRQHandler(void)
+{
+    if (TIM_GetITStatus(TIM2, TIM_IT_Update) == SET)
+    {
+        speed = Encoder_Get();
+        TIM_ClearITPendingBit(TIM2, TIM_IT_Update);
+    }
+}
+
 int main()
 {   
     OLED_Init();
-    PWM_Init();
-    IC_Init();
-
-    OLED_ShowString(1, 1, "Freq:00000Hz");
-    OLED_ShowString(1, 1, "Duty:000%");
-    Pwm_SetCompare2(500);
-    Pwm_SetPrescaler2(720 - 1);
+    Encoder_Init();
+    Timer_Init();
+    OLED_ShowString(1, 1, "CNT:00000");
 
     while(1)
 	{
-        OLED_ShowNum(1, 6, IC_GetFreq(), 5);
-        OLED_ShowNum(2, 6, IC_GetDuty(), 3);
+        OLED_ShowSignedNum(1, 5, speed, 5);
 	}
 }
