@@ -21,7 +21,7 @@ void AD_Init(void)
     ADC_init_stru.ADC_DataAlign = ADC_DataAlign_Right;
     ADC_init_stru.ADC_ExternalTrigConv = ADC_ExternalTrigConv_None;
     ADC_init_stru.ADC_NbrOfChannel = 1;
-    ADC_init_stru.ADC_ContinuousConvMode = DISABLE;
+    ADC_init_stru.ADC_ContinuousConvMode = ENABLE;
     ADC_init_stru.ADC_ScanConvMode = DISABLE;
     ADC_Init(ADC1, &ADC_init_stru);
 
@@ -35,11 +35,11 @@ void AD_Init(void)
     while(ADC_GetResetCalibrationStatus(ADC1) == SET);
     ADC_StartCalibration(ADC1);
     while(ADC_GetCalibrationStatus(ADC1) == SET);
+
+    ADC_SoftwareStartConvCmd(ADC1, ENABLE);
 }
 
 uint16_t AD_GetValue(void)
 {
-    ADC_SoftwareStartConvCmd(ADC1, ENABLE);
-    while(ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC) == RESET);
     return ADC_GetConversionValue(ADC1);
 }
