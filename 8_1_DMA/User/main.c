@@ -20,27 +20,20 @@ uint8_t data_dst[] = {0, 0, 0, 0};
 int main()
 {   
     OLED_Init();
-    MYDMA_Init((uint32_t)data_src, (uint32_t)data_dst, sizeof(data_src));
+    AD_Init();
+
+    OLED_ShowString(1, 1, "AD1:");
+    OLED_ShowString(2, 1, "AD2:");
+    OLED_ShowString(3, 1, "AD3:");
+    OLED_ShowString(4, 1, "AD4:");
 
     while(1)
 	{
-        data_src[0]++;
-        data_src[1]++;
-        data_src[2]++;
-        data_src[3]++;
-
-        OLED_ShowHexNum(1+2, 1, data_src[0], 2);
-        OLED_ShowHexNum(1+2, 4, data_src[1], 2);
-        OLED_ShowHexNum(1+2, 7, data_src[2], 2);
-        OLED_ShowHexNum(1+2, 10, data_src[3], 2);
-
-        Delay_ms(500);
-        MYDMA_Transfer(sizeof(data_src));
-
-        OLED_ShowHexNum(2+2, 1, data_dst[0], 2);
-        OLED_ShowHexNum(2+2, 4, data_dst[1], 2);
-        OLED_ShowHexNum(2+2, 7, data_dst[2], 2);
-        OLED_ShowHexNum(2+2, 10, data_dst[3], 2);
-        
+        AD_GetValue();
+        OLED_ShowNum(1, 5, AD_value[0], 4);
+        OLED_ShowNum(2, 5, AD_value[1], 4);
+        OLED_ShowNum(3, 5, AD_value[2], 4);
+        OLED_ShowNum(4, 5, AD_value[3], 4);
+        Delay_ms(100);
     }
 }

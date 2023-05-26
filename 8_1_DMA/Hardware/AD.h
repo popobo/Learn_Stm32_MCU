@@ -3,8 +3,10 @@
 
 #include <stdint.h>
 
+extern uint16_t AD_value[4];
+
 void AD_Init(void);
 
-uint16_t AD_GetValue(uint8_t ADC_channel);
+void AD_GetValue(void);
 
 #endif
