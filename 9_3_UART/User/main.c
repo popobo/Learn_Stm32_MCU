@@ -33,5 +33,12 @@ int main()
 
     while(1)
 	{
+        if(Serial_GetRxFlag() == 1)
+        {
+            OLED_ShowHexNum(1, 1, Serial_rx_packet[0], 2);
+            OLED_ShowHexNum(1, 4, Serial_rx_packet[1], 2);
+            OLED_ShowHexNum(1, 7, Serial_rx_packet[2], 2);
+            OLED_ShowHexNum(1, 10, Serial_rx_packet[3], 2);
+        }
     }
 }

@@ -115,11 +115,46 @@ void Serial_SendPacket(void)
     Serial_SenByte(SERIAL_PACK_ED);
 }
 
+enum
+{
+    RX_STATE_HEAD,
+    RX_STATE_DATA,
+    RX_STATE_END
+};
+
 void USART1_IRQHandler(void)
 {
+    static uint8_t rx_state = 0;
+    static uint8_t index = 0;
     if (USART_GetFlagStatus(USART1, USART_FLAG_RXNE) == SET)
     {
-        
+        uint8_t rx_data = USART_ReceiveData(USART1);
+
+        switch (rx_state)
+        {
+        case RX_STATE_HEAD: //注意处理数据包的混问题
+            if (rx_data == SERIAL_PACK_ST)
+            {
+                rx_state = 1;
+            }
+            break;
+        case RX_STATE_DATA:
+            Serial_rx_packet[index++] = rx_data;
+            if(index >= SERIAL_PACK_LEN)
+            {
+                index = 0;
+                rx_state = RX_STATE_END;
+            }
+            break;
+        case RX_STATE_END:
+            if (rx_data == SERIAL_PACK_ED)
+            {
+                rx_state = 0;
+                Serial_rx_flag = 1;
+            }
+            break;
+        }
+
         Serial_rx_flag = 1;
         USART_ClearITPendingBit(USART1, USART_FLAG_RXNE);
     }
