@@ -3,6 +3,13 @@
 
 #include <stdint.h>
 
+#define SERIAL_PACK_ST 0xFF
+#define SERIAL_PACK_ED 0xFE
+#define SERIAL_PACK_LEN 4
+
+extern uint8_t Serial_tx_packet[SERIAL_PACK_LEN];
+extern uint8_t Serial_rx_packet[SERIAL_PACK_LEN];
+
 void Serial_Init(void);
 
 void Serial_SenByte(uint8_t byte);
@@ -17,6 +24,6 @@ void Serial_printf(char* format, ...);
 
 uint8_t Serial_GetRxFlag(void);
 
-uint8_t Serial_GetRxData(void);
+void Serial_SendPacket(void);
 
 #endif

@@ -23,15 +23,15 @@ int main()
 {   
     OLED_Init();
     Serial_Init();
-    
+
+    Serial_tx_packet[0] = 0x10;
+    Serial_tx_packet[1] = 0x20;
+    Serial_tx_packet[2] = 0x30;
+    Serial_tx_packet[3] = 0x40;
+
+    Serial_SendPacket();
+
     while(1)
 	{
-        if (Serial_GetRxFlag() == 1)
-        {
-            rx_data = Serial_GetRxData();
-            Serial_SenByte(rx_data);
-            // 读完DR, 标志位自动清零
-            OLED_ShowHexNum(1, 1, rx_data, 2);
-        }
     }
 }

@@ -1,9 +1,11 @@
 #include "stm32f10x.h"
 #include <stdarg.h>
 #include <stdio.h>
+#include "Serial.h"
 
-uint8_t serial_rx_data;
-uint8_t serial_rx_flag;
+uint8_t Serial_tx_packet[SERIAL_PACK_LEN];
+uint8_t Serial_rx_packet[SERIAL_PACK_LEN];
+uint8_t Serial_rx_flag;
 
 void Serial_Init(void)
 {
@@ -98,25 +100,27 @@ void Serial_printf(char* format, ...)
 
 uint8_t Serial_GetRxFlag(void)
 {
-    if(serial_rx_flag == 1)
+    if(Serial_rx_flag == 1)
     {
-        serial_rx_flag = 0;
+        Serial_rx_flag = 0;
         return 1;
     }
     return 0;
 }
 
-uint8_t Serial_GetRxData(void)
+void Serial_SendPacket(void)
 {
-    return serial_rx_data;
+    Serial_SenByte(SERIAL_PACK_ST);
+    Serial_SendArray(Serial_tx_packet, SERIAL_PACK_LEN);
+    Serial_SenByte(SERIAL_PACK_ED);
 }
 
 void USART1_IRQHandler(void)
 {
     if (USART_GetFlagStatus(USART1, USART_FLAG_RXNE) == SET)
     {
-        serial_rx_data = USART_ReceiveData(USART1);
-        serial_rx_flag = 1;
+        
+        Serial_rx_flag = 1;
         USART_ClearITPendingBit(USART1, USART_FLAG_RXNE);
     }
 }
