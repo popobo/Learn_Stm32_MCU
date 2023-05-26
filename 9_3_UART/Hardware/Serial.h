@@ -15,4 +15,8 @@ void Serial_SendNumber(uint32_t number, uint8_t len);
 
 void Serial_printf(char* format, ...);
 
+uint8_t Serial_GetRxFlag(void);
+
+uint8_t Serial_GetRxData(void);
+
 #endif

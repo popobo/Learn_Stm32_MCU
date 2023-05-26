@@ -26,10 +26,11 @@ int main()
     
     while(1)
 	{
-        if (USART_GetFlagStatus(USART1, USART_FLAG_RXNE) == SET)
+        if (Serial_GetRxFlag() == 1)
         {
-            rx_data = USART_ReceiveData(USART1);
-            // 读完标志位自动清零
+            rx_data = Serial_GetRxData();
+            Serial_SenByte(rx_data);
+            // 读完DR, 标志位自动清零
             OLED_ShowHexNum(1, 1, rx_data, 2);
         }
     }

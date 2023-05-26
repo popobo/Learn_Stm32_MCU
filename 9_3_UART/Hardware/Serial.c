@@ -2,6 +2,9 @@
 #include <stdarg.h>
 #include <stdio.h>
 
+uint8_t serial_rx_data;
+uint8_t serial_rx_flag;
+
 void Serial_Init(void)
 {
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, ENABLE);
@@ -27,6 +30,15 @@ void Serial_Init(void)
     USART_init_stru.USART_StopBits = USART_StopBits_1;
     USART_init_stru.USART_WordLength = USART_WordLength_8b;
     USART_Init(USART1, &USART_init_stru);
+
+    USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
+    NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
+    NVIC_InitTypeDef NVIC_init_stru;
+    NVIC_init_stru.NVIC_IRQChannel = USART1_IRQn;
+    NVIC_init_stru.NVIC_IRQChannelCmd = ENABLE;
+    NVIC_init_stru.NVIC_IRQChannelPreemptionPriority = 1;
+    NVIC_init_stru.NVIC_IRQChannelSubPriority = 1;
+    NVIC_Init(&NVIC_init_stru);
 
     USART_Cmd(USART1, ENABLE);
 }
@@ -82,4 +94,29 @@ void Serial_printf(char* format, ...)
     vsprintf(string, format, arg);
     va_end(arg);
     Serial_SendString(string);
+}
+
+uint8_t Serial_GetRxFlag(void)
+{
+    if(serial_rx_flag == 1)
+    {
+        serial_rx_flag = 0;
+        return 1;
+    }
+    return 0;
+}
+
+uint8_t Serial_GetRxData(void)
+{
+    return serial_rx_data;
+}
+
+void USART1_IRQHandler(void)
+{
+    if (USART_GetFlagStatus(USART1, USART_FLAG_RXNE) == SET)
+    {
+        serial_rx_data = USART_ReceiveData(USART1);
+        serial_rx_flag = 1;
+        USART_ClearITPendingBit(USART1, USART_FLAG_RXNE);
+    }
 }
