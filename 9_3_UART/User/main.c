@@ -17,34 +17,20 @@
 #include <string.h>
 #include <stdio.h>
 
+uint8_t rx_data;
+
 int main()
 {   
     OLED_Init();
     Serial_Init();
     
-    const char* array = "hello world!\r\n";
-
-    Serial_SenByte(0x41);
-
-    Serial_SendArray((uint8_t *)array, (uint16_t)strlen(array));
-
-    Serial_SendString(array);
-
-    Serial_SendNumber(12345, 5);
-
-    printf("hello world %d", 6);
-
-    Serial_printf("hello world %d", 6);
-
-    Serial_printf("你好 %d", 6);
-
     while(1)
 	{
+        if (USART_GetFlagStatus(USART1, USART_FLAG_RXNE) == SET)
+        {
+            rx_data = USART_ReceiveData(USART1);
+            // 读完标志位自动清零
+            OLED_ShowHexNum(1, 1, rx_data, 2);
+        }
     }
-}
-
-int fputc(int ch, FILE* f)
-{
-    Serial_SenByte(ch);
-    return ch;
 }
