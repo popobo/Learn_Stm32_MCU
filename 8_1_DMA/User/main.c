@@ -29,7 +29,6 @@ int main()
 
     while(1)
 	{
-        AD_GetValue();
         OLED_ShowNum(1, 5, AD_value[0], 4);
         OLED_ShowNum(2, 5, AD_value[1], 4);
         OLED_ShowNum(3, 5, AD_value[2], 4);
